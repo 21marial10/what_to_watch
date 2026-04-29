@@ -7,7 +7,7 @@ import requests
 from . import app
 
 # Заголовок для авторизации. Так заголовок к API будет выполняться
-# как от авторизованного пользователя. 
+# как от авторизованного пользователя.
 AUTH_HEADER = f'Bearer {app.config["DROPBOX_TOKEN"]}'
 # Эндпоинт для загрузки изображений. Его можно найти в документации
 # метода [upload()](https://www.dropbox.com/developers/documentation/http/documentation#files-upload).
@@ -16,6 +16,7 @@ UPLOAD_LINK = 'https://content.dropboxapi.com/2/files/upload'
 # в документации метода [create_shared_link_with_settings()](https://www.dropbox.com/developers/documentation/http/documentation#sharing-create_shared_link_with_settings).
 SHARING_LINK = ('https://api.dropboxapi.com/2/'
                 'sharing/create_shared_link_with_settings')
+
 
 def upload_files_to_dropbox(images):
     urls = []  # Список для сбора готовых ссылок.
@@ -57,14 +58,14 @@ def upload_files_to_dropbox(images):
             data = response.json()
             # Проверить, есть ли ключ url на верхнем уровне ответа.
             if 'url' not in data:
-                # Обходной манёвр на случай, 
+                # Обходной манёвр на случай,
                 # если пользователь попытается отправить
                 # один и тот же файл дважды. Ему вернётся
                 # ссылка на уже существующий файл.
                 data = data['error']['shared_link_already_exists']['metadata']
             # Получить ссылку по ключу.
             url = data['url']
-            # Заменить режим работы ссылки, 
+            # Заменить режим работы ссылки,
             # чтобы получить ссылку на скачивание.
             url = url.replace('&dl=0', '&raw=1')
             # Добавить ссылку в общий список ссылок.
